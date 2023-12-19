@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon Registration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: auto; /* Hide scrollbars due to animated background */
+        }
+
+        h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px; /* Add margin to separate from the title */
+        }
+
+        .registration-options {
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex; /* Use flexbox to make the options lie beside each other */
+        }
+
+        .registration-options label {
+            display:inline-block;
+            margin-right: 100px;
+            cursor: pointer;
+        }
+
+        .registration-options input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .registration-options input[type="radio"]:checked + label {
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: grid;
+            grid-gap: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .team-fields {
+            display: none;
+          
+            
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            margin-right: 250px;
+            margin-left: 250px;
+            border-radius: 10px;
+            border:none;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover transition */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+
+    <video autoplay muted loop>
+        <!-- Provide the path to your video file -->
+        <source src="video (2160p).mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container">
+        <header>
+            <img src="grow4techlogo.jpg" alt="Hackathon Logo">
+        </header>
+        <h2>Hackathon Registration Form</h2>
+        <h3>Registration Type:</h3>
+        <div class="registration-options">
+            <input type="radio" id="individual" name="registrationType" value="individual" checked>
+            <label for="individual">Individual</label>
+    
+            <input type="radio" id="team" name="registrationType" value="team">
+            <label for="team">Team</label>
+        </div>
+        <form action="#" method="post">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" required>
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="contactNumber">Contact Number:</label>
+            <input type="tel" id="contactNumber" name="contactNumber" required>
+
+            <label for="occupation">Institution:</label>
+            <input type="text" id="occupation" name="occupation" required>
+
+            <div class="team-fields">
+                <label for="teamName">Team Name*:</label>
+                <input type="text" id="teamName" name="teamName" required>
+    
+                <label for="numTeamMembers">Number of Team Members*:</label>
+                <input type="number" id="numTeamMembers" name="numTeamMembers" required>
+    
+                <div id="teamMembersContainer"></div>
+            </div>
+
+
+            <!-- Payment Field -->
+            <label for="payment"> Amount Payable:</label>
+            <input type="text" id="payment" name="payment" value="Rs. 500" readonly>
+
+            <!-- Add more fields as needed -->
+
+            <button type="submit">Pay now</button>
+        </form>
+    </div>
+
+    <script>
+        const registrationTypeRadio = document.querySelectorAll('input[name="registrationType"]');
+        const teamFields = document.querySelector('.team-fields');
+        const numTeamMembersInput = document.getElementById('numTeamMembers');
+        const teamMembersContainer = document.getElementById('teamMembersContainer');
+        const paymentInput = document.getElementById('payment');
+
+        registrationTypeRadio.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (radio.value === 'team') {
+                    teamFields.style.display = 'block';
+                    updatePaymentAmount();
+                } else {
+                    teamFields.style.display = 'none';
+                    paymentInput.value = 'Rs. 500';
+                }
+            });
+        });
+
+        numTeamMembersInput.addEventListener('input', () => {
+    if (teamFields.style.display === 'block') {
+        updatePaymentAmount();
+        generateTeamMembersFields();
+    }
+});
+
+
+
+
+
+
+
+
+        numTeamMembersInput.addEventListener('input', generateTeamMembersFields);
+
+        function generateTeamMembersFields() {
+            const numTeamMembers = parseInt(numTeamMembersInput.value, 10);
+            let html = '';
+
+            for (let i = 0; i < numTeamMembers; i++) {
+                const labelForTeamMember = `teamMember${i + 1}`;
+                html += `<label for="${labelForTeamMember}">Name of Team member ${i + 1}:</label>`;
+                html += `<input type="text" id="${labelForTeamMember}" name="${labelForTeamMember}" required>`;
+            }
+
+            teamMembersContainer.innerHTML = html;
+        }
+        function updatePaymentAmount() {
+            const numTeamMembers = parseInt(numTeamMembersInput.value, 10);
+            const amountPerPerson = 500;
+            const totalAmount = numTeamMembers * amountPerPerson;
+            paymentInput.value = `Rs. ${totalAmount}`;
+        }
+
+        // Initial update when the page loads
+        updatePaymentAmount();
+    </script>
+</body>
+</html>
+
